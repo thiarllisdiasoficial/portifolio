@@ -1,0 +1,428 @@
+<!-- 
+( 'A visão do projeto' - Plano mestre e manifesto de construção )
+
+Escrevo esta reflexão na primeira linha deste arquivo, antes mesmo que a primeira tag seja executada, para registrar toda a engenharia, os conceitos e o raciocínio por trás de cada linha de código deste portfólio. Este documento serve como um mapa mental detalhado de tudo o que foi planejado para a estrutura HTML, a estilização CSS, as animações e os scripts de interatividade. A ideia central aqui é construir uma interface moderna, veloz, fluida e extremamente elegante, utilizando o conceito de Glassmorphism (vidro fosco), temas escuros profundos e feedbacks visuais em tempo real para quem estiver navegando.
+
+( 'A cabeça e a infraestrutura' - Configurações do Head e Tailwind )
+
+Tudo começa no topo do documento com a declaração do tipo de arquivo e as configurações essenciais do navegador. A tag html recebe o atributo de idioma em português do Brasil e a classe scroll-smooth, que dita a regra global de que qualquer navegação por links internos deve deslizar suavemente pela tela. Na tag head, a configuração do viewport garante a responsividade total, impedindo que dispositivos móveis renderizem a página de forma minúscula ou desproporcional. Para a tipografia, busquei a fonte Inter direto dos servidores do Google Fonts, trazendo um visual limpo e contemporâneo. Para a iconografia, importei a biblioteca Phosphor Icons via CDN, que nos permite invocar ícones vetoriais modernos apenas utilizando classes CSS específicas, como as famílias ph para ícones vazados e ph-fill para ícones preenchidos.
+
+Ainda na infraestrutura, a importação do Tailwind CSS via CDN transforma a forma como o design é aplicado. Em vez de escrever centenas de linhas de CSS tradicional, usamos um script interno de configuração chamado tailwind.config. Nele, definimos as variáveis de cores personalizadas que dão identidade ao projeto. O fundo ganha o tom #050811 (um azul profundo quase negro), o cartão recebe #111827 (um cinza fechado para dar contraste), a borda utiliza uma cor branca com baixíssima opacidade (rgba(255, 255, 255, 0.08)), o destaque recebe o azul elétrico #3B82F6 e o tom verde recebe a cor #10B981. Essa centralização no script permite que qualquer classe como bg-fundo, text-destaque ou border-verde funcione instantaneamente em todo o HTML.
+
+( 'O ambiente visual e o corpo' - Atributos globais do Body e iluminação de fundo )
+
+A tag body recebe um conjunto rigoroso de utilitários do Tailwind. A classe font-sans ativa a fonte Inter, antialiased suaviza a renderização das bordas das letras nos monitores, min-h-screen garante que o corpo ocupe 100% da altura da tela mesmo se houver pouco conteúdo, e overflow-x-hidden previne qualquer rolagem horizontal indesejada em telas pequenas. Um detalhe marcante é a customização da seleção de texto através de selection:bg-destaque e selection:text-white, garantindo que, quando o visitante selecionar qualquer palavra com o mouse, o destaque seja o azul elétrico da marca.
+
+Logo no início do body, existe uma div estrategicamente posicionada com posição fixa (fixed), centralizada horizontalmente e com z-index zero. Ela possui uma cor de fundo azul com opacidade reduzida (bg-destaque/10) e um desfoque gigante de 120 pixels (blur-[120px]). O papel dessa div é criar uma "esfera de luz" desfocada no fundo da página, dando a impressão de iluminação ambiente sem interferir na leitura ou nos cliques, graças à classe pointer-events-none.
+
+( 'A navegação superior' - O cabeçalho com Glassmorphism )
+
+O cabeçalho (header) é construído com a propriedade sticky top-0, o que faz com que ele permaneça fixo no teto da janela conforme o usuário rola a página. A camada visual do menu é um exemplo clássico de Glassmorphism: ele combina um fundo escuro semi-transparente (bg-fundo/70), uma borda inferior discreta (border-b border-borda) e o efeito backdrop-blur-md, que desfoca dinamicamente tudo o que passa por trás dele. O z-50 garante que o menu fique sempre na camada mais alta, sobrepondo cartões e imagens.
+
+Dentro do menu, dividimos a estrutura entre a marca à esquerda e a navegação à direita. Para telas grandes, a tag nav utiliza hidden sm:flex, ficando oculta em celulares e visível a partir de monitores médios. Para dispositivos móveis, foi criado um botão de menu hambúrguer com o id menuBtn e um ícone com id menuIcon, acompanhado de um container oculto com id mobileMenu que utiliza o backdrop-blur-xl para cobrir a tela suavemente quando acionado.
+
+( 'A primeira impressão' - Seção de Apresentação e o cartão flutuante )
+
+A primeira seção visível é o herói da página (id apresentação). Utilizando o sistema de grid do Tailwind (grid-cols-1 lg:grid-cols-2), a tela se divide em duas colunas idênticas em monitores grandes. Na coluna da esquerda, temos o badge de status "Disponível para novas oportunidades". Esse elemento possui uma animação pulsar especial: dentro de um container relativo, colocamos um pequeno ponto verde com a classe animate-ping, que cria uma onda invisível expandindo continuamente, enquanto um ponto sólido fica por cima, simulando o LED de um radar ativo.
+
+Ainda na coluna esquerda, os títulos principais usam fontes de grande impacto (text-5xl até text-7xl) com leading bem ajustado e botões de ação (CTA) que possuem sombra colorida (shadow-destaque/20) e efeitos de transição ao passar o mouse. Na coluna da direita, posicionamos o cartão de perfil flutuante. Esse cartão utiliza a classe card-flutuante, que ativa a animação de levitação criada no CSS. Atrás do cartão, existe outro brilho desfocado dedicado, e dentro dele temos avatares estilizados, informações de localização, áreas de estudo e um badge final com o tom verde.
+
+( 'A narrativa pessoal e as imagens' - Seção Sobre Mim e manipulação de fotos )
+
+A seção seguinte (id historia) aborda a trajetória pessoal. O layout é organizado em um grid de 12 colunas no desktop (lg:grid-cols-12), onde a imagem do perfil ocupa 5 colunas e o texto informativo ocupa 7 colunas. A imagem está envolvida em um container do tipo group. Isso é crucial: ao aplicar a classe group-hover:scale-105 na tag img, dizemos ao navegador que, sempre que o cursor do mouse entrar em qualquer parte do cartão (group), a foto deve sofrer um leve zoom de 5%, criando um efeito dinâmico e elegante. A imagem também utiliza object-cover para garantir que o enquadramento não seja distorcido independentemente do tamanho do container, acompanhada por uma legenda flutuante com desfoque de fundo na parte inferior da foto.
+
+( 'A experiência e as habilidades' - Seções de bagagem e interações em grade )
+
+Na seção de experiência (id experiencia), os cartões de histórico profissional utilizam um grid responsivo (sm:grid-cols-2). Cada cartão possui o efeito hover:-translate-y-2, que faz com que o bloco inteiro suba 2 pixels no eixo Y ao passar o mouse, simulando que o cartão está sendo levantado. Além disso, a borda do cartão muda para um tom mais claro (hover:border-white/30) e o fundo recebe um brilho sutil (hover:bg-white/[0.02]).
+
+Na seção de bagagem e habilidades (id bagagem), dividimos os conhecimentos em categorias. A estrutura utiliza flex flex-wrap gap-4, permitindo que as tags de habilidades fiquem lado a lado e pulem de linha automaticamente se não couberem na tela. Para as tags de atitude, aplicamos hover:border-verde e hover:text-verde. Isso faz com que, ao passar o mouse, tanto a borda quanto o texto fiquem na cor verde definida no Tailwind. Para a seção de conhecimento técnico, a tag do estudo de Python é destacada com o fundo e borda azulados (bg-destaque/10), enquanto os outros itens de informática e manutenção iniciam com texto cinza e ganham o destaque verde ao serem focalizados pelo cursor.
+
+( 'Animações nativas, ícones e emojis' - Catálogo de efeitos e personalização do rodapé )
+
+Um dos pontos mais importantes do design é o entendimento das animações nativas do Tailwind CSS e a aplicação de ícones. O Tailwind nos fornece quatro animações nativas principais via classes utilitárias, que podem ser aplicadas a qualquer elemento do HTML, como ícones, botões ou badges:
+
+A primeira é a animate-pulse, utilizada no coração do rodapé. Ela altera suavemente a opacidade do elemento entre 100% e 50% em um ciclo contínuo, criando um efeito de respiração ou batimento calmo. A segunda é a animate-ping, usada na nossa bolinha de status, que faz o elemento expandir para fora e sumir, como um sinal de radar. A terceira é a animate-bounce, que faz o elemento pular para cima e para baixo continuamente, ideal para setas de indicação ou botões de alerta. A quarta é a animate-spin, que faz o elemento girar 360 graus infinitamente em sentido horário, perfeita para ícones de carregamento, engrenagens ou elementos circulares.
+
+Se quisermos alterar a animação do coração no rodapé (localizado na tag i com as classes ph-fill ph-heart text-destaque animate-pulse), basta substituir a classe animate-pulse por qualquer uma das outras opções. Por exemplo, trocando para animate-bounce o coração ficará saltando, ou trocando para animate-ping ele emitirá pulsações visuais.
+
+Sobre a iconografia e os emojis: o projeto prefere o uso do Phosphor Icons por ser vetorial, garantindo que o ícone fique perfeito em qualquer resolução de tela (HD, 4K ou celular). A sintaxe ph-fill indica ícones totalmente preenchidos (como ph-fill ph-heart ou ph-fill ph-whatsapp-logo), enquanto a sintaxe ph indica ícones em contorno linha (como ph ph-code ou ph ph-envelope-simple). Caso emojis nativos do sistema operacional sejam adicionados ao HTML, eles herdarão o tamanho da fonte do parágrafo pai, mas os ícones da biblioteca Phosphor oferecem controle total de cor via classes do Tailwind (como text-destaque, text-verde ou text-gray-400).
+
+( 'A inteligência das interações' - Scripts de Menu e Intersection Observer )
+
+No final do arquivo HTML, antes do fechamento da tag body, habitam os scripts em JavaScript puro que trazem vida ao sistema. O primeiro bloco de código gerencia a navegação móvel. Ele captura os elementos menuBtn, menuIcon e mobileMenu através do getElementById. Ao identificar o evento de clique (addEventListener('click')), o script verifica se o menu está oculto, altera dinamicamente as classes CSS do container entre hidden e flex, altera o atributo de acessibilidade aria-expanded e alterna a classe do ícone de menu entre o hambúrguer (ph-list) e o botão de fechar (ph-x). Além disso, um evento secundário percorre todos os links móveis (.mobile-link) para fechar o menu automaticamente assim que o usuário clica em uma seção.
+
+O segundo script utiliza a API nativa IntersectionObserver, que é o mecanismo responsável por fazer os elementos surgirem na tela conforme o usuário rola a página. O script seleciona todos os elementos que possuem a classe reveal. O observador é configurado com um threshold de 0.1 (significa que a animação dispara quando apenas 10% do elemento entra na área visível da tela) e um rootMargin negativo de 50 pixels na parte inferior. Quando o elemento cruza essa linha virtual de visão, a função adiciona a classe in-view ao elemento e remove a observação sobre ele (unobserve), garantindo que a animação de entrada aconteça apenas uma vez de forma performática e sem gastar processamento desnecessário.
+
+( 'A física do estilo customizado' - O arquivo style.css e regras globais )
+
+Enquanto o HTML e o Tailwind cobrem a estrutura e o design utilitário, o arquivo style.css guarda as regras de física, animações complexas e refinamentos que o framework não cobre diretamente. No topo do CSS, declaramos as variáveis nativas :root para a cor de fundo (--cor-fundo: #050811) e cor de destaque (--cor-destaque: #3B82F6), permitindo retrabalhar esses valores em seletores CSS puros.
+
+Para a rolagem global, aplicamos em html o scroll-behavior: smooth e o scroll-padding-top: 100px. Esse offset de 100 pixels é crucial: ele impede que, ao clicar em um link do menu, a tela pare exatamente em cima do título da seção, adicionando uma margem de conforto para o cabeçalho fixo não cobrir o texto.
+
+Personalizamos a barra de rolagem do navegador através dos pseudo-elementos ::-webkit-scrollbar. Definimos a largura fina de 6 pixels, pintamos o trilho (track) com a cor de fundo e estilizamos o indicador (thumb) com um tom cinza escuro (#1f2937), cantos arredondados de 10 pixels e transição para a cor de destaque quando o mouse passa por cima (hover).
+
+A animação de levitação do cartão de perfil é criada através do seletor @keyframes float. A regra define um ciclo de tempo onde, em 0% e 100%, o elemento está na posição original (translateY(0px)), e em 50% do tempo ele sobe 8 pixels negativos no eixo vertical (translateY(-8px)). A classe .card-flutuante aplica essa animação com a duração de 6 segundos, usando a curva de aceleração ease-in-out e repetição infinita.
+
+O sistema de animação de entrada por rolagem é controlado pelas classes .reveal e .reveal.in-view. Na classe .reveal, o elemento começa com opacidade zero (invisível) e deslocado 30 pixels para baixo (transform: translateY(30px)). Definimos uma transição de 0.8 segundos usando a curva cúbica de Bézier cubic-bezier(0.16, 1, 0.3, 1), que faz o movimento começar rápido e desacelerar suavemente perto do final. Quando o JavaScript adiciona a classe .in-view, a opacidade muda para 1 e o deslocamento volta para zero, fazendo o elemento surgir subindo suavemente.
+
+Por fim, o arquivo CSS aborda a acessibilidade e a saúde do usuário. O seletor :focus-visible adiciona uma borda azul de 2 pixels com deslocamento de 4 pixels em links e botões quando o usuário navega usando o teclado (tecla Tab). Na parte inferior, a regra de mídia @media (prefers-reduced-motion: reduce) detecta se o visitante possui alguma sensibilidade a movimentos ou se configurou o sistema operacional para reduzir animações. Se ativado, o CSS desliga o scroll suave, cancela a animação do card flutuante, força todos os elementos .reveal a ficarem imediatamente visíveis sem transição e reduz o tempo de transição de todo o site para quase zero, garantindo acessibilidade universal e conforto visual absoluto.
+-->
+
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Thiarllis — Portfólio Pessoal</title>
+    <meta name="description" content="Portfólio pessoal de Thiarllis, com experiências, habilidades e formas de contato.">
+
+    <!-- Fonte Inter do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Ícones Phosphor -->
+    <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fundo: '#050811',
+                        cartao: '#111827',
+                        borda: 'rgba(255, 255, 255, 0.08)',
+                        destaque: '#3B82F6',
+                        verde: '#10B981',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="font-sans antialiased selection:bg-destaque selection:text-white flex flex-col min-h-screen relative overflow-x-hidden text-gray-300">
+
+    <!-- Fundo abstrato com brilho suave -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-destaque/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
+
+    <header class="w-full border-b border-borda bg-fundo/70 backdrop-blur-md py-4 sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-5xl mx-auto px-6 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-white tracking-tight hover:opacity-80 transition-opacity">
+                Thiarllis<span class="text-destaque">.</span>
+            </a>
+
+            <!-- Menu desktop -->
+            <nav class="hidden sm:flex items-center gap-8">
+                <a href="#historia" class="nav-link text-sm font-medium text-gray-400 hover:text-white transition-colors">Sobre</a>
+                <a href="#experiencia" class="nav-link text-sm font-medium text-gray-400 hover:text-white transition-colors">Experiência</a>
+                <a href="#bagagem" class="nav-link text-sm font-medium text-gray-400 hover:text-white transition-colors">Habilidades</a>
+                <a href="#contato" class="nav-link text-sm font-medium text-gray-400 hover:text-white transition-colors">Contato</a>
+                
+                <a href="#contato" class="ml-4 inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm text-white font-medium transition-all">
+                    Falar comigo <i class="ph ph-arrow-up-right text-destaque"></i>
+                </a>
+            </nav>
+
+            <!-- Botão do menu mobile -->
+            <button id="menuBtn" aria-label="Abrir menu" aria-expanded="false" class="sm:hidden text-gray-300 hover:text-destaque transition-colors text-2xl">
+                <i class="ph ph-list" id="menuIcon"></i>
+            </button>
+        </div>
+
+        <!-- Menu mobile (dropdown) -->
+        <nav id="mobileMenu" class="sm:hidden hidden flex-col gap-1 px-6 pt-4 pb-4 bg-fundo/95 backdrop-blur-xl border-b border-borda absolute w-full left-0 top-full shadow-2xl">
+            <a href="#historia" class="mobile-link block py-3 text-gray-300 hover:text-destaque hover:bg-white/5 px-4 rounded-lg transition-all">Sobre</a>
+            <a href="#experiencia" class="mobile-link block py-3 text-gray-300 hover:text-destaque hover:bg-white/5 px-4 rounded-lg transition-all">Experiência</a>
+            <a href="#bagagem" class="mobile-link block py-3 text-gray-300 hover:text-destaque hover:bg-white/5 px-4 rounded-lg transition-all">Habilidades</a>
+            <a href="#contato" class="mobile-link block py-3 text-gray-300 hover:text-destaque hover:bg-white/5 px-4 rounded-lg transition-all">Contato</a>
+        </nav>
+    </header>
+
+    <main class="flex-grow max-w-5xl mx-auto px-6 w-full relative z-10">
+
+        <!-- HERO SECTION LIMPO (Sem foto minúscula, focado no impacto do título) -->
+        <section id="apresentacao" class="relative py-20 lg:py-32 border-b border-borda flex items-center min-h-[85vh]">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center w-full">
+                
+                <!-- Coluna da Esquerda (Textos) -->
+                <div class="text-center lg:text-left">
+                    <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300 text-sm font-medium mb-8">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-verde opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-verde"></span>
+                        </span>
+                        Disponível para novas oportunidades
+                    </div>
+
+                    <h1 class="reveal text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white mb-6 tracking-tight leading-[1.1]">
+                        Construindo <br class="hidden lg:block" /> meu caminho <br class="hidden lg:block" /> na <span class="text-destaque">tecnologia.</span>
+                    </h1>
+
+                    <p class="reveal text-gray-400 text-lg mb-10 font-light max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                        Oi, eu sou o <strong class="text-white font-semibold">Thiarllis</strong>. Gosto de aprender, resolver problemas e transformar curiosidade em prática. Estou desenvolvendo minha base em tecnologia, informática e Python, sempre com vontade de evoluir.
+                    </p>
+
+                    <div class="reveal flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="#contato" class="w-full sm:w-auto bg-destaque hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 shadow-lg shadow-destaque/20 hover:shadow-destaque/40">
+                            <i class="ph ph-paper-plane-tilt text-xl"></i> Entrar em contato
+                        </a>
+                        <a href="#historia" class="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 text-white px-8 py-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+                            Conhecer minha história <i class="ph ph-arrow-down text-gray-400"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Coluna da Direita (Card de Informações Essenciais - Sem foto poluindo) -->
+                <div class="flex justify-center lg:justify-end">
+                    <div class="reveal relative w-full max-w-md card-flutuante">
+                        <div class="absolute inset-0 bg-destaque/20 blur-[60px] rounded-[2rem] pointer-events-none"></div>
+                        
+                        <div class="relative bg-cartao/80 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] shadow-2xl">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <p class="text-[10px] text-destaque font-bold tracking-widest uppercase mb-1">Perfil</p>
+                                    <h3 class="text-white text-2xl font-bold tracking-tight">Thiarllis</h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-xl bg-destaque/10 border border-destaque/30 flex items-center justify-center text-destaque text-xl font-bold">
+                                    T
+                                </div>
+                            </div>
+                            
+                            <p class="text-gray-400 text-sm mb-6 pb-6 border-b border-borda">
+                                Assistente Técnico • Estudante de Python
+                            </p>
+                            
+                            <div class="space-y-4 mb-8">
+                                <div class="flex items-center gap-4 text-gray-300 text-sm p-2 hover:bg-white/5 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10"><i class="ph ph-map-pin text-gray-400"></i></div>
+                                    Marcolândia, Piauí
+                                </div>
+                                <div class="flex items-center gap-4 text-gray-300 text-sm p-2 hover:bg-white/5 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10"><i class="ph ph-code text-gray-400"></i></div>
+                                    Python • Informática
+                                </div>
+                                <div class="flex items-center gap-4 text-gray-300 text-sm p-2 hover:bg-white/5 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10"><i class="ph ph-wrench text-gray-400"></i></div>
+                                    Montagem e manutenção
+                                </div>
+                                <div class="flex items-center gap-4 text-gray-300 text-sm p-2 hover:bg-white/5 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10"><i class="ph ph-users text-gray-400"></i></div>
+                                    Atendimento ao público
+                                </div>
+                            </div>
+
+                            <div class="bg-verde/10 border border-verde/20 rounded-xl p-4 flex items-center gap-3 text-verde text-sm font-semibold justify-center">
+                                <i class="ph-fill ph-sparkle text-lg"></i> Aprendendo, praticando e crescendo
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO "SOBRE MIM" COM FOTO EM DESTAQUE REAL -->
+        <section id="historia" class="py-24 border-b border-borda">
+            <h2 class="reveal text-3xl font-bold text-white mb-16 flex items-center gap-3">
+                <i class="ph-fill ph-book-open text-destaque text-4xl"></i>
+                Um pouco sobre mim
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Foto em tamanho de destaque (Coluna Esquerda da Seção) -->
+                <div class="reveal lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-sm">
+                        <!-- Brilho de fundo para dar destaque -->
+                        <div class="absolute inset-0 bg-destaque/20 blur-[50px] rounded-3xl pointer-events-none"></div>
+                        
+                        <div class="relative bg-cartao border border-borda p-3 rounded-3xl shadow-2xl overflow-hidden group">
+                            <!-- 🖼️ FOTO GRANDE (Coloque sua foto como foto.jpg na mesma pasta) -->
+                            <img src="imagens/foto.jpg.jpeg" alt="Thiarllis Dias" class="w-full h-[400px] object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500">
+                            
+                            <!-- Legenda sutil sobre a foto -->
+                            <div class="absolute bottom-6 left-6 right-6 bg-fundo/80 backdrop-blur-md border border-white/10 p-3.5 rounded-xl text-center">
+                                <p class="text-white text-sm font-medium">Thiarllis Dias</p>
+                                <p class="text-gray-400 text-xs mt-0.5">21 anos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Textos explicativos (Coluna Direita da Seção) -->
+                <div class="reveal lg:col-span-7 space-y-6 text-gray-300 text-lg leading-relaxed font-light">
+                    <p>
+                        Se você chegou até aqui, é porque algo chamou sua atenção. Então, por favor, puxe uma cadeira e permita que eu me apresente de verdade. Não vou usar palavras difíceis ou tentar fingir que sou um "super profissional" cheio de jargões corporativos. Sou apenas um jovem buscando o meu espaço.
+                    </p>
+                    <p>
+                        Para ser bem sincero, não tenho um currículo gigantesco e nem sou o mestre da tecnologia (ainda!). Sou um cara de Marcolândia, PI, que está construindo sua base um dia de cada vez.
+                    </p>
+                    <p>
+                        Eu gosto de olhar para o trabalho de um jeito bem simples: <strong class="text-white font-medium">me dê uma missão, e eu vou dar o meu melhor para cumpri-la.</strong> Se eu não souber como fazer, eu pergunto, eu pesquiso e eu aprendo.
+                    </p>
+                    <p>
+                        Hoje, trabalho como Assistente Técnico autônomo, tenho uma boa base de informática e decidi me aventurar nos estudos de <span class="text-white font-semibold underline decoration-destaque decoration-2 underline-offset-4">Python</span>. Estou no começo dessa jornada, aprendendo a lógica por trás das coisas, mas com a vontade de quem quer ir longe.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="experiencia" class="py-24 border-b border-borda">
+            <h2 class="reveal text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                <i class="ph-fill ph-hammer text-destaque text-4xl"></i>
+                Minha vida
+            </h2>
+
+            <p class="reveal text-gray-400 text-lg mb-12 font-light max-w-2xl">
+                Antes de pensar em códigos, eu aprendi a trabalhar com as mãos e com as pessoas. Essas foram as minhas verdadeiras escolas:
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl">
+                <div class="reveal group bg-cartao border border-borda p-8 rounded-2xl hover:border-white/30 transition-all duration-300 hover:-translate-y-2 hover:bg-white/[0.02]">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl text-destaque group-hover:scale-110 transition-transform">
+                            <i class="ph ph-storefront text-2xl"></i>
+                        </div>
+                        <h3 class="text-white font-bold text-xl">Vendas & Caixa</h3>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed font-light">
+                        Onde aprendi a ouvir as pessoas, ter paciência, lidar com dinheiro com responsabilidade e entender o que significa atender bem um cliente.
+                    </p>
+                </div>
+
+                <div class="reveal group bg-cartao border border-borda p-8 rounded-2xl hover:border-white/30 transition-all duration-300 hover:-translate-y-2 hover:bg-white/[0.02]">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl text-destaque group-hover:scale-110 transition-transform">
+                            <i class="ph ph-package text-2xl"></i>
+                        </div>
+                        <h3 class="text-white font-bold text-xl">Carregador & Entregador</h3>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed font-light">
+                        Aqui o trabalho foi pesado. Suar a camisa me ensinou o que é ter responsabilidade com horários e que não existe trabalho ruim quando se tem um objetivo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="bagagem" class="py-24 border-b border-borda max-w-4xl">
+            <h2 class="reveal text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                <i class="ph-fill ph-backpack text-destaque text-4xl"></i>
+                O que eu trago na bagagem
+            </h2>
+
+            <p class="reveal text-gray-400 text-lg mb-12 font-light">
+                Ainda estou enchendo essa mochila, mas aqui estão as coisas que eu já carrego comigo com muita segurança:
+            </p>
+
+            <div class="reveal mb-12">
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">Atitude</h3>
+                <div class="flex flex-wrap gap-4">
+                    <span class="px-5 py-3 bg-[#111827] text-gray-300 border border-white/10 rounded-xl text-sm font-medium flex items-center gap-2 hover:border-verde hover:text-verde transition-colors cursor-default">
+                        <i class="ph-fill ph-check-circle text-lg"></i> Pontualidade
+                    </span>
+                    <span class="px-5 py-3 bg-[#111827] text-gray-300 border border-white/10 rounded-xl text-sm font-medium flex items-center gap-2 hover:border-verde hover:text-verde transition-colors cursor-default">
+                        <i class="ph-fill ph-target text-lg"></i> Vontade de Aprender
+                    </span>
+                    <span class="px-5 py-3 bg-[#111827] text-gray-300 border border-white/10 rounded-xl text-sm font-medium flex items-center gap-2 hover:border-verde hover:text-verde transition-colors cursor-default">
+                        <i class="ph-fill ph-users text-lg"></i> Atendimento ao Público
+                    </span>
+                </div>
+            </div>
+
+            <div class="reveal">
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">Conhecimento técnico</h3>
+                <div class="flex flex-wrap gap-4">
+                    <span class="px-5 py-3 bg-destaque/10 text-destaque border border-destaque/30 rounded-xl text-sm font-semibold cursor-default">
+                        Python (Estudando/Iniciante)
+                    </span>
+                    <span class="px-5 py-3 bg-[#111827] text-gray-400 border border-white/10 rounded-xl text-sm hover:border-verde hover:text-verde transition-colors cursor-default">
+                        Informática Básica
+                    </span>
+                    <span class="px-5 py-3 bg-[#111827] text-gray-400 border border-white/10 rounded-xl text-sm hover:border-verde hover:text-verde transition-colors cursor-default">
+                        Montagem e Manutenção
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="py-32 text-center max-w-3xl mx-auto">
+            <div class="reveal">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 border border-white/10 mb-8">
+                    <i class="ph-fill ph-chats-circle text-3xl text-destaque"></i>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">Bora bater um papo?</h2>
+                <p class="text-gray-400 text-lg mb-10 font-light leading-relaxed">
+                    Se você precisa de alguém que não tem medo de colocar a mão na massa e que está pronto para abraçar novas experiências, me mande um "Oi".
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-5">
+                    <a href="https://wa.me/5589000000000" target="_blank" rel="noopener noreferrer" class="group bg-verde text-fundo px-8 py-4 rounded-xl font-bold transition-all hover:scale-105 flex items-center justify-center gap-3">
+                        <i class="ph-fill ph-whatsapp-logo text-2xl"></i>
+                        Me chama no WhatsApp
+                    </a>
+
+                    <a href="mailto:thiarllisdiasoficial@gmail.com" class="group bg-transparent border border-white/20 hover:border-white/50 text-white px-8 py-4 rounded-xl font-medium transition-all hover:scale-105 flex items-center justify-center gap-3">
+                        <i class="ph ph-envelope-simple text-2xl"></i>
+                        Ou mande um E-mail
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-borda py-10 mt-auto text-center">
+        <p class="text-gray-400 text-sm font-medium">
+            Feito por Thiarllis.
+        </p>
+        <p class="text-gray-500 text-xs mt-3 opacity-60">
+            Marcolândia, Piauí. Porque as grandes jornadas começam em algum lugar.
+        </p>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const menuIcon = document.getElementById('menuIcon');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+            menuIcon.className = isOpen ? 'ph ph-list' : 'ph ph-x';
+            menuBtn.setAttribute('aria-expanded', String(!isOpen));
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+                menuIcon.className = 'ph ph-list';
+                menuBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        revealEls.forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>

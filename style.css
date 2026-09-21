@@ -1,0 +1,91 @@
+/* =========================================================
+   style.css — Estilos modernos do portfólio (Design Premium)
+   ========================================================= */
+
+:root {
+    --cor-fundo: #050811;
+    --cor-destaque: #3B82F6;
+}
+
+/* Base */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px; /* Evita que o menu fixo cubra os títulos */
+}
+
+body {
+    background-color: var(--cor-fundo);
+}
+
+/* Seleção de texto mais elegante */
+::selection {
+    background: var(--cor-destaque);
+    color: #ffffff;
+}
+
+/* Barra de rolagem fina e moderna */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--cor-fundo);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1f2937;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--cor-destaque);
+}
+
+/* Efeito sutil de flutuação para o Card de Perfil */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+.card-flutuante {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Animação de revelar ao rolar a página */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Foco para acessibilidade via teclado */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--cor-destaque);
+    outline-offset: 4px;
+    border-radius: 6px;
+}
+
+/* Reduzir animações se o usuário preferir */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    .card-flutuante {
+        animation: none;
+    }
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    * {
+        transition-duration: 0.01ms !important;
+    }
+}
